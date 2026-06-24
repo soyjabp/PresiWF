@@ -85,66 +85,66 @@ button{padding:10px 20px;font-size:18px}
 });
 */
 
-const sGoal = new Audio("recursos/sounds/gol.mp3");
-const sWhistle = new Audio("recursos/sounds/silbato.mp3");
-const sTick = new Audio("recursos/sounds/tick.mp3");
-const sSave = new Audio("recursos/sounds/atajada.mp3");
+const sGoal = new Audio("sounds/gol.mp3");
+const sWhistle = new Audio("sounds/silbato.mp3");
+const sTick = new Audio("sounds/tick.mp3");
+const sSave = new Audio("sounds/atajada.mp3");
 
 const teams = [
 
-{ name:"México", flag:"recursos/banderas/mexico.png" },
-{ name:"USA", flag:"recursos/banderas/usa.png" },
-{ name:"Canadá", flag:"recursos/banderas/canada.png" },
-{ name:"Panamá", flag:"recursos/banderas/panama.png" },
-{ name:"Haití", flag:"recursos/banderas/haiti.png" },
-{ name:"Curazao", flag:"recursos/banderas/curazao.png" },
+{ name:"México", flag:"banderas/mexico.png" },
+{ name:"USA", flag:"banderas/usa.png" },
+{ name:"Canadá", flag:"banderas/canada.png" },
+{ name:"Panamá", flag:"banderas/panama.png" },
+{ name:"Haití", flag:"banderas/haiti.png" },
+{ name:"Curazao", flag:"banderas/curazao.png" },
 
-{ name:"Argentina", flag:"recursos/banderas/argentina.png" },
-{ name:"Brasil", flag:"recursos/banderas/brasil.png" },
-{ name:"Colombia", flag:"recursos/banderas/colombia.png" },
-{ name:"Uruguay", flag:"recursos/banderas/uruguay.png" },
-{ name:"Ecuador", flag:"recursos/banderas/ecuador.png" },
-{ name:"Paraguay", flag:"recursos/banderas/paraguay.png" },
+{ name:"Argentina", flag:"banderas/argentina.png" },
+{ name:"Brasil", flag:"banderas/brasil.png" },
+{ name:"Colombia", flag:"banderas/colombia.png" },
+{ name:"Uruguay", flag:"banderas/uruguay.png" },
+{ name:"Ecuador", flag:"banderas/ecuador.png" },
+{ name:"Paraguay", flag:"banderas/paraguay.png" },
 
-{ name:"Francia", flag:"recursos/banderas/francia.png" },
-{ name:"Alemania", flag:"recursos/banderas/alemania.png" },
-{ name:"España", flag:"recursos/banderas/espana.png" },
-{ name:"Portugal", flag:"recursos/banderas/portugal.png" },
-{ name:"Suecia", flag:"recursos/banderas/suecia.png" },
-{ name:"Austria", flag:"recursos/banderas/austria.png" },
-{ name:"Bélgica", flag:"recursos/banderas/belgica.png" },
-{ name:"Bosnia", flag:"recursos/banderas/bosnia.png" },
-{ name:"Chequia", flag:"recursos/banderas/chequia.png" },
-{ name:"Croacia", flag:"recursos/banderas/croacia.png" },
-{ name:"Escocia", flag:"recursos/banderas/escocia.png" },
-{ name:"Inglaterra", flag:"recursos/banderas/inglaterra.png" },
-{ name:"Noruega", flag:"recursos/banderas/noruega.png" },
-{ name:"Países Bajos", flag:"recursos/banderas/paises-bajos.png" },
-{ name:"Suiza", flag:"recursos/banderas/suiza.png" },
-{ name:"Turquía", flag:"recursos/banderas/turquia.png" },
+{ name:"Francia", flag:"banderas/francia.png" },
+{ name:"Alemania", flag:"banderas/alemania.png" },
+{ name:"España", flag:"banderas/espana.png" },
+{ name:"Portugal", flag:"banderas/portugal.png" },
+{ name:"Suecia", flag:"banderas/suecia.png" },
+{ name:"Austria", flag:"banderas/austria.png" },
+{ name:"Bélgica", flag:"banderas/belgica.png" },
+{ name:"Bosnia", flag:"banderas/bosnia.png" },
+{ name:"Chequia", flag:"banderas/chequia.png" },
+{ name:"Croacia", flag:"banderas/croacia.png" },
+{ name:"Escocia", flag:"banderas/escocia.png" },
+{ name:"Inglaterra", flag:"banderas/inglaterra.png" },
+{ name:"Noruega", flag:"banderas/noruega.png" },
+{ name:"Países Bajos", flag:"banderas/paises-bajos.png" },
+{ name:"Suiza", flag:"banderas/suiza.png" },
+{ name:"Turquía", flag:"banderas/turquia.png" },
 
-{ name:"Marruecos", flag:"recursos/banderas/marruecos.png" },
-{ name:"Ghana", flag:"recursos/banderas/ghana.png" },
-{ name:"Argelia", flag:"recursos/banderas/argelia.png" },
-{ name:"Egipto", flag:"recursos/banderas/egipto.png" },
-{ name:"Senegal", flag:"recursos/banderas/senegal.png" },
-{ name:"Sudáfrica", flag:"recursos/banderas/sudafrica.png" },
-{ name:"Túnez", flag:"recursos/banderas/tunez.png" },
-{ name:"Congo", flag:"recursos/banderas/congo.png" },
-{ name:"Costa de Marfil", flag:"recursos/banderas/costa-marfil.png" },
-{ name:"Cabo Verde", flag:"recursos/banderas/cabo-verde.png" },
+{ name:"Marruecos", flag:"banderas/marruecos.png" },
+{ name:"Ghana", flag:"banderas/ghana.png" },
+{ name:"Argelia", flag:"banderas/argelia.png" },
+{ name:"Egipto", flag:"banderas/egipto.png" },
+{ name:"Senegal", flag:"banderas/senegal.png" },
+{ name:"Sudáfrica", flag:"banderas/sudafrica.png" },
+{ name:"Túnez", flag:"banderas/tunez.png" },
+{ name:"Congo", flag:"banderas/congo.png" },
+{ name:"Costa de Marfil", flag:"banderas/costa-marfil.png" },
+{ name:"Cabo Verde", flag:"banderas/cabo-verde.png" },
 
-{ name:"Japón", flag:"recursos/banderas/japon.png" },
-{ name:"Corea", flag:"recursos/banderas/korea.png" },
-{ name:"Arabia Saudita", flag:"recursos/banderas/arabia.png" },
-{ name:"Irán", flag:"recursos/banderas/iran.png" },
-{ name:"Iraq", flag:"recursos/banderas/iraq.png" },
-{ name:"Qatar", flag:"recursos/banderas/qatar.png" },
-{ name:"Uzbekistán", flag:"recursos/banderas/uzbekistan.png" },
-{ name:"Jordania", flag:"recursos/banderas/jordan.png" },
-{ name:"Australia", flag:"recursos/banderas/australia.png" },
+{ name:"Japón", flag:"banderas/japon.png" },
+{ name:"Corea", flag:"banderas/korea.png" },
+{ name:"Arabia Saudita", flag:"banderas/arabia.png" },
+{ name:"Irán", flag:"banderas/iran.png" },
+{ name:"Iraq", flag:"banderas/iraq.png" },
+{ name:"Qatar", flag:"banderas/qatar.png" },
+{ name:"Uzbekistán", flag:"banderas/uzbekistan.png" },
+{ name:"Jordania", flag:"banderas/jordan.png" },
+{ name:"Australia", flag:"banderas/australia.png" },
 
-{ name:"Nueva Zelanda", flag:"recursos/banderas/nueva-zelanda.png" }
+{ name:"Nueva Zelanda", flag:"banderas/nueva-zelanda.png" }
 
 ];
 
