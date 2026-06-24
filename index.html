@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PWF</title>
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#061321;
+color:white;
+}
+
+header{
+display:flex;
+justify-content:
+space-between;
+align-items:center;
+padding:16px 40px;
+background:rgba(4,12,24,.9);
+position:fixed;
+width:100%;
+box-sizing:border-box;
+}
+
+header img{
+height:64px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:28px;
+}
+
+.hero{
+min-height:100vh;
+background:linear-gradient(rgba(4,10,18,.7),rgba(4,10,18,.85)),
+radial-gradient(circle at top,#1b3b63,#061321);
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:100px 20px;
+}
+
+
+.hero h1{
+font-size:64px
+;margin:0;
+color:#d4af37;
+}
+
+.hero p{
+font-size:22px;
+max-width:700px;
+}
+
+.btn{
+display:inline-block;
+margin:10px;
+padding:14px28px;
+border-radius:8px;
+background:#d4af37;
+color:#061321;
+text-decoration:none;
+font-weight:bold;
+}
+
+section{
+padding:70px 20px;
+max-width:1100px;
+margin:auto;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:28px;
+}
+
+.card{
+background:#0d2239;
+border:1px solid #1f4468;
+border-radius:16px;
+padding:24px;
+}
+
+.card a{
+padding:10px 20px;
+background:#d4af37;
+color:#000;
+font-weight: bold;
+text-decoration:none;
+border-radius:10px;
+border:1px solid #24435f;
+}
+
+.card h3{
+color:#d4af37;
+}
+
+.card p{margin-bottom:20px;line-height:1.5}
+
+
+footer{
+text-align:center
+;padding:30px
+;background:
+#081829;
+color:#ccc;
+}
+
+.community{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.community a{
+padding:15px 24px;
+background:#11273f;
+color:#fff;
+text-decoration:none;
+border-radius:10px;
+border:1px solid #24435f;
+}
+
+.minijuegos {
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+padding:15px 24px;
+background:#11273f;
+border-radius:10px;
+border:1px solid #24435f;
+}
+
+.btn_exts {
+  background: linear-gradient(145deg, #08219f,#e74c3c, #0a9115);
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+}
+
+
+</style>
+</head>
+<body>
+<header>
+<img src="pwf.png" alt="PWF logo">
+
+<nav>
+<a href="#games">Juegos</a>
+<a href="#community">Comunidad</a>
+<a href="#minijuegos">Mini</a>
+</nav>
+</header>
+
+<div class="hero">
+<div>
+<h1>Presi World Football</h1>
+<p><em>Un mundo por explorar, una historia por conquistar.</em></p>
+<p>Descubre universos futbolísticos inspirados en Latinoamérica.</p>
+</div>
+</div>
+
+<section id="games">
+<h2 style="text-align:center;color:#d4af37">Juegos</h2>
+<div class="cards">
+<div class="card">
+<h3>🇨🇴 PresiFPC</h3>
+<p>Simulador inspirado en el fútbol colombiano. Vive temporadas llenas de emoción, estadísticas y competiciones.</p>
+<a href="https://soyjabp.github.io/PresiFPC/">Entrar</a>
+</div>
+
+<div class="card">
+<h3>🌎 Próximamente</h3>
+<p>El siguiente universo futbolístico está en preparación.</p>
+</div>
+</div>
+</section>
+
+<section id="minijuegos">
+<h2 style="text-align:center;color:#d4af37">
+Mini Juegos</h2>
+<div class="minijuegos">
+
+<button class="btn_exts" onclick="window.location.href='minijuegos/mundial.html'">
+Memory world
+</button>
+
+<button class="btn_exts" onclick="window.location.href='minijuegos/penalty-world.html'">
+Penalty World
+</button> 
+
+<button class="btn_exts" onclick="window.location.href='minijuegos/survivor-world.html'">
+Survivor World
+</button>  
+
+</div>
+</section>
+
+
+<section id="community">
+<h2 style="text-align:center;color:#d4af37">
+Comunidad</h2>
+<div class="community">
+<a href="https://youtube.com/@presiwf?si=2ofRxhg4qv-lK98m">YouTube</a>
+<a href="https://x.com/PresiWF">X</a>
+<a href="https://www.facebook.com/profile.php?id=61589507349032">Facebook</a>
+</div>
+</section>
+
+<footer>
+<strong>PWF | Presi World Football</strong><br>
+Un mundo por explorar, una historia por conquistar.
+</footer>
+</body>
+</html>
