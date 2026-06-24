@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Penalty World</title>
+<style>
+body{font-family:Arial,sans-serif;background:#0b6623;color:#fff;margin:0;padding:20px;text-align:center}
+.hidden{display:none}
+#teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;max-width:1000px;margin:auto}
+.team{background:#fff;color:#000;border-radius:10px;padding:10px;cursor:pointer}
+.team img{width:70px;height:50px;object-fit:contain}
+#goal{width:400px;max-width:95vw;height:200px;border:8px solid #fff;margin:15px auto;position:relative;background:#87ceeb;overflow:hidden}
+
+.zone{position:absolute;cursor:pointer; border:1px dashed rgba(255,255,255,.4);}
+.zone:hover{ background:rgba(255,255,255,.12);}
+
+[data-zone="1"]{left:0; top:0; width:33.33%; height:50%}
+[data-zone="2"]{left:33.33%; top:0; width:33.33%; height:50%}
+[data-zone="3"]{left:66.66% ;top:0 ;width:33.33% ;height:50%}
+[data-zone="4"]{left:0 ;top:50% ;width:33.33%; height:50%}
+[data-zone="5"]{left:33.33%; top:50%; width:33.33%; height:50%;}
+[data-zone="6"]{left:66.66%; top:50%; width:33.33%; height:50%;}
+
+#keeper{position:absolute;width:150px;left:50%;bottom:10px;transform:translateX(-50%);transition:.35s}
+#ball{position:absolute;width:40px;display:none;z-index:20;}
+#countdown{font-size:60px;height:70px}
+button{padding:10px 20px;font-size:18px}
+
+.result{
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ margin: 5px;
+ background: #dcdc38;
+ color: #000;
+}
+</style>
+</head>
+<body>
+
+<div id="selection">
+<label>
+ <input type="checkbox" id="chooseRival">
+  Elegir rival manualmente
+</label>
+<h1>Elige tu selección</h1>
+<div id="teams"></div>
+</div>
+
+<div id="game" class="hidden">
+<h2 id="match"></h2>
+<div class="result">
+  <div id="round"> Ronda</div>
+  <div id="score">0 - 0</div>
+  <div id="turn"></div>
+</div>
+
+<div id="countdown"></div>
+
+<div id="message"></div>
+<div>Jugador: <span id="playerHist"></span></div>
+<div>Rival: <span id="rivalHist"></span></div>
+
+<div id="goal">
+<img id="keeper" src="img/keeper-center.png">
+<img id="ball" src="img/ball.png">
+
+<div class="zone" data-zone="1"></div>
+<div class="zone" data-zone="2"></div>
+<div class="zone" data-zone="3"></div>
+<div class="zone" data-zone="4"></div>
+<div class="zone" data-zone="5"></div>
+<div class="zone" data-zone="6"></div>
+</div>
+
+<br>
+<button id="restart" class="hidden" onclick="location.reload()">Jugar otra vez</button>
+</div>
+
+<script>
+
+/*
+    document.querySelectorAll(".zone").forEach(zone=>{
+    zone.innerHTML = zone.dataset.zone;
+});
+*/
+
+const sGoal = new Audio("recursos/sounds/gol.mp3");
+const sWhistle = new Audio("recursos/sounds/silbato.mp3");
+const sTick = new Audio("recursos/sounds/tick.mp3");
+const sSave = new Audio("recursos/sounds/atajada.mp3");
+
+const teams = [
+
+{ name:"México", flag:"recursos/banderas/mexico.png" },
+{ name:"USA", flag:"recursos/banderas/usa.png" },
+{ name:"Canadá", flag:"recursos/banderas/canada.png" },
+{ name:"Panamá", flag:"recursos/banderas/panama.png" },
+{ name:"Haití", flag:"recursos/banderas/haiti.png" },
+{ name:"Curazao", flag:"recursos/banderas/curazao.png" },
+
+{ name:"Argentina", flag:"recursos/banderas/argentina.png" },
+{ name:"Brasil", flag:"recursos/banderas/brasil.png" },
+{ name:"Colombia", flag:"recursos/banderas/colombia.png" },
+{ name:"Uruguay", flag:"recursos/banderas/uruguay.png" },
+{ name:"Ecuador", flag:"recursos/banderas/ecuador.png" },
+{ name:"Paraguay", flag:"recursos/banderas/paraguay.png" },
+
+{ name:"Francia", flag:"recursos/banderas/francia.png" },
+{ name:"Alemania", flag:"recursos/banderas/alemania.png" },
+{ name:"España", flag:"recursos/banderas/espana.png" },
+{ name:"Portugal", flag:"recursos/banderas/portugal.png" },
+{ name:"Suecia", flag:"recursos/banderas/suecia.png" },
+{ name:"Austria", flag:"recursos/banderas/austria.png" },
+{ name:"Bélgica", flag:"recursos/banderas/belgica.png" },
+{ name:"Bosnia", flag:"recursos/banderas/bosnia.png" },
+{ name:"Chequia", flag:"recursos/banderas/chequia.png" },
+{ name:"Croacia", flag:"recursos/banderas/croacia.png" },
+{ name:"Escocia", flag:"recursos/banderas/escocia.png" },
+{ name:"Inglaterra", flag:"recursos/banderas/inglaterra.png" },
+{ name:"Noruega", flag:"recursos/banderas/noruega.png" },
+{ name:"Países Bajos", flag:"recursos/banderas/paises-bajos.png" },
+{ name:"Suiza", flag:"recursos/banderas/suiza.png" },
+{ name:"Turquía", flag:"recursos/banderas/turquia.png" },
+
+{ name:"Marruecos", flag:"recursos/banderas/marruecos.png" },
+{ name:"Ghana", flag:"recursos/banderas/ghana.png" },
+{ name:"Argelia", flag:"recursos/banderas/argelia.png" },
+{ name:"Egipto", flag:"recursos/banderas/egipto.png" },
+{ name:"Senegal", flag:"recursos/banderas/senegal.png" },
+{ name:"Sudáfrica", flag:"recursos/banderas/sudafrica.png" },
+{ name:"Túnez", flag:"recursos/banderas/tunez.png" },
+{ name:"Congo", flag:"recursos/banderas/congo.png" },
+{ name:"Costa de Marfil", flag:"recursos/banderas/costa-marfil.png" },
+{ name:"Cabo Verde", flag:"recursos/banderas/cabo-verde.png" },
+
+{ name:"Japón", flag:"recursos/banderas/japon.png" },
+{ name:"Corea", flag:"recursos/banderas/korea.png" },
+{ name:"Arabia Saudita", flag:"recursos/banderas/arabia.png" },
+{ name:"Irán", flag:"recursos/banderas/iran.png" },
+{ name:"Iraq", flag:"recursos/banderas/iraq.png" },
+{ name:"Qatar", flag:"recursos/banderas/qatar.png" },
+{ name:"Uzbekistán", flag:"recursos/banderas/uzbekistan.png" },
+{ name:"Jordania", flag:"recursos/banderas/jordan.png" },
+{ name:"Australia", flag:"recursos/banderas/australia.png" },
+
+{ name:"Nueva Zelanda", flag:"recursos/banderas/nueva-zelanda.png" }
+
+];
+
+function getRandomRival(){
+
+    const available =
+        teams.filter(
+            t => t.name !== playerTeam.name
+        );
+
+    return available[
+        Math.floor(
+            Math.random() * available.length
+        )
+    ];
+}
+
+
+const teamsDiv=document.getElementById("teams");
+teams.forEach(t=>{
+teamsDiv.innerHTML+=`<div class="team" onclick="selectTeam('${t.name}')"><img src="${t.flag}"><br>${t.name}</div>`;
+});
+
+let playerTeam,rivalTeam;
+let playerGoals=0,rivalGoals=0;
+let playerHist="",rivalHist="";
+let round=1;
+let phase="shoot";
+let waiting=false;
+
+let playerShots = 0;
+let rivalShots = 0;
+
+let suddenDeath = false;
+
+let selectingRival = false;
+
+const keeper=document.getElementById("keeper");
+const ball=document.getElementById("ball");
+
+const keeperConfig = {
+
+    1:{img:"keeper-top-left.png", flip:false, x:-90, y:-60},
+    2:{img:"keeper-center.png", flip:false, x:0, y:-60},
+    3:{img:"keeper-top-left.png", flip:true, x:90, y:-60},
+
+    4:{img:"keeper-left.png", flip:false, x:-90, y:0},
+    5:{img:"keeper-center.png", flip:false, x:0, y:0},
+    6:{img:"keeper-left.png", flip:true, x:90, y:0}
+
+};
+
+const ballPositions = {
+    1:{left:40, top:20},
+    2:{left:180, top:20},
+    3:{left:320, top:20},
+
+    4:{left:40, top:120},
+    5:{left:180, top:120},
+    6:{left:320, top:120}
+};
+
+/*
+function selectTeam(name){
+
+    playerTeam = teams.find(t=>t.name===name);
+
+    do{
+        rivalTeam = teams[
+            Math.floor(Math.random()*teams.length)
+        ];
+    }while(rivalTeam.name===name);
+
+    selection.classList.add("hidden");
+    game.classList.remove("hidden");
+
+    document.getElementById("match").innerHTML =
+    `${playerTeam.name} vs ${rivalTeam.name}`;
+
+    sWhistle.play();
+
+    turn.textContent="Tu turno: PATEAR";
+}
+*/
+
+function selectTeam(name){
+    // Estamos escogiendo rival
+    if(selectingRival){
+
+        rivalTeam = teams.find(
+            t => t.name === name
+        );
+        // Evitar mismo equipo
+        if(rivalTeam.name === playerTeam.name){
+            alert("Debes elegir otro equipo como rival");
+            return;
+        }
+        selectingRival = false;
+        startGame();
+        return;
+    }
+
+    // Selección del jugador
+    playerTeam = teams.find(
+        t => t.name === name
+    );
+
+    // Checkbox activado
+    if(
+        document.getElementById("chooseRival").checked
+    ){
+
+        selectingRival = true;
+
+        document.querySelector("#selection h1")
+            .textContent = "Elige tu rival";
+        return;
+    }
+
+    // Rival aleatorio
+    do{
+        rivalTeam =
+            teams[
+                Math.floor(
+                    Math.random()*teams.length
+                )
+            ];
+
+    }while(
+        rivalTeam.name === playerTeam.name
+    );
+    startGame();
+}
+
+
+function startGame(){
+
+    selection.classList.add("hidden");
+    game.classList.remove("hidden");
+
+    document.getElementById("match").innerHTML =
+        `${playerTeam.name} vs ${rivalTeam.name}`;
+
+    sWhistle.play();
+
+    turn.textContent = "Tu turno: PATEAR";
+}
+
+document.querySelectorAll(".zone").forEach(z=>{
+z.onclick=()=>{
+if(waiting)return;
+play(Number(z.dataset.zone));
+};
+});
+
+
+function play(zone){
+
+    waiting = true;
+
+    let c = 4;
+
+    countdown.textContent = c;
+
+    sTick.currentTime = 0;
+    sTick.play();
+
+    let t = setInterval(()=>{
+
+        c--;
+
+        if(c > 0){
+
+            countdown.textContent = c;
+
+
+        }else{
+
+            clearInterval(t);
+            countdown.textContent = "⚽";
+
+            phase === "shoot"
+                ? playerShoot(zone)
+                : playerSave(zone);
+        }
+
+    },1000);
+
+}
+
+
+
+function moveKeeper(zone){
+let k=keeperConfig[zone];
+keeper.src="img/"+k.img;
+keeper.style.transform=`translateX(-50%) translate(${k.x}px,${k.y}px) ${k.flip?'scaleX(-1)':''}`;
+}
+
+function showBall(zone){
+
+    const pos = ballPositions[zone];
+
+    ball.style.left = pos.left + "px";
+    ball.style.top = pos.top + "px";
+
+    ball.style.display = "block";
+
+}
+
+function resetField(){
+keeper.src="img/keeper-center.png";
+keeper.style.transform="translateX(-50%)";
+ball.style.display="none";
+countdown.textContent="";
+}
+
+
+function playerShoot(zone){
+    showBall(zone);
+
+    let keeperZone =
+        Math.floor(Math.random()*6)+1;
+
+    playerShots++;
+    moveKeeper(keeperZone);
+
+    let saved =
+        keeperZone === zone;
+
+    if(saved){
+        sSave.currentTime = 0;
+        sSave.play();
+
+        message.textContent =
+            "🧤 Atajada";
+
+        playerHist += "❌ ";
+
+    }else{
+        sGoal.currentTime = 0;
+        sGoal.play();
+        message.textContent =
+            "⚽ Gol";
+
+        playerGoals++;
+        playerHist += "⚽ ";
+    }
+
+    update();
+
+    if(checkEarlyWinner()){
+        return;
+    }
+
+    setTimeout(()=>{
+
+        resetField();
+
+        phase = "save";
+
+        turn.textContent =
+            "Tu turno: ATAJAR";
+
+        waiting = false;
+
+    },1800);
+
+}
+
+
+function playerSave(zone){
+    let shot =
+        Math.floor(Math.random()*6)+1;
+
+    rivalShots++;
+    showBall(shot);
+    moveKeeper(zone);
+
+    let saved =
+        zone === shot;
+
+    if(saved){
+
+        sSave.currentTime = 0;
+        sSave.play();
+
+        message.textContent =
+            "🧤 ¡La atajaste!";
+
+        rivalHist += "❌ ";
+
+    }else{
+
+        sGoal.currentTime = 0;
+        sGoal.play();
+
+        message.textContent =
+            "⚽ Gol rival";
+
+        rivalGoals++;
+        rivalHist += "⚽ ";
+    }
+
+    update();
+
+    if(checkEarlyWinner()){
+        return;
+    }
+    setTimeout(()=>{
+        resetField();
+        // Rondas normales
+        if(!suddenDeath){
+            if(round === 5){
+                if(playerGoals !== rivalGoals){
+                    finish();
+                    return;
+
+                }
+                suddenDeath = true;
+
+                turn.textContent =
+                    "⚽ Muerte súbita";
+            }else{
+                round++;
+                turn.textContent =
+                    "Tu turno: PATEAR";
+
+            }
+
+        }
+
+        // Muerte súbita
+        else{
+            if(playerGoals !== rivalGoals){
+                finish();
+                return;
+
+            }
+            turn.textContent =
+                "⚽ Muerte súbita";
+
+        }
+        phase = "shoot";
+        waiting = false;
+
+    },1800);
+}
+
+
+function update(){
+score.textContent=`${playerGoals} - ${rivalGoals}`;
+playerHistEl.textContent=playerHist;
+rivalHistEl.textContent=rivalHist;
+roundEl();
+}
+
+const playerHistEl=document.getElementById("playerHist");
+const rivalHistEl=document.getElementById("rivalHist");
+
+function roundEl(){
+document.getElementById("round").textContent=round<=5?`Ronda ${round} de 5`:"Muerte súbita";
+}
+
+
+function finish(){
+    waiting = true;
+    // GANASTE
+   if(playerGoals > rivalGoals){
+
+    message.innerHTML = `
+        🏆 ¡GANASTE!
+        <br><br>
+        ${playerTeam.name}
+        ${playerGoals}-${rivalGoals}
+        ${rivalTeam.name}
+    `;
+
+    document
+        .getElementById("restart")
+        .classList.remove("hidden");
+}
+    // PERDISTE
+    else{
+        message.innerHTML = `
+            😢 PERDISTE
+            <br><br>
+            ${rivalTeam.name}
+            ganó
+            ${rivalGoals}-${playerGoals}
+        `;
+        document
+            .getElementById("restart")
+            .classList.remove("hidden");
+    }
+
+}
+
+function checkEarlyWinner(){
+
+    // En muerte súbita no existe ganador anticipado
+    if(suddenDeath){
+        return false;
+    }
+
+    const playerRemaining = 5 - playerShots;
+    const rivalRemaining = 5 - rivalShots;
+
+    if(
+        playerGoals >
+        rivalGoals + rivalRemaining
+    ){
+        finish();
+        return true;
+    }
+
+    if(
+        rivalGoals >
+        playerGoals + playerRemaining
+    ){
+        finish();
+        return true;
+    }
+
+    return false;
+}
+
+</script>
+</body>
+</html>

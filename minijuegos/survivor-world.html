@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Survivor World 2026</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+.hidden{
+    display:none;
+}
+
+h1,h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+#teamSelector,
+#teamsGrid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:10px;
+    margin-top:20px;
+}
+
+.team-card,
+.team-option{
+    background:#1e293b;
+    border:2px solid transparent;
+    border-radius:10px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.team-card img,
+.team-option img{
+    width:60px;
+    height:40px;
+    object-fit:cover;
+    margin-bottom:8px;
+}
+
+.team-option:hover{
+    transform:scale(1.05);
+}
+
+.selected{
+    border-color:#facc15;
+}
+
+.player-team{
+    border-color:#22c55e !important;
+}
+
+.eliminated{
+    opacity:.25;
+    filter:grayscale(100%);
+    border-color:#ef4444 !important;
+}
+
+button{
+    display:block;
+    margin:25px auto;
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+#startBtn,
+#continueBtn,
+#restartBtn{
+    background:#22c55e;
+    color:white;
+}
+
+#startBtn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+#countdown{
+    text-align:center;
+    font-size:70px;
+    font-weight:bold;
+    margin:20px 0;
+}
+
+#message{
+    text-align:center;
+    margin-top:20px;
+    font-size:20px;
+}
+
+#playerInfo{
+    text-align:center;
+    margin-bottom:15px;
+    font-size:20px;
+}
+
+#champion{
+    text-align:center;
+}
+
+#champion img{
+    width:180px;
+    margin:20px 0;
+}
+
+</style>
+</head>
+<body>
+
+<!-- SELECCIÓN -->
+
+<div id="selectionScreen">
+
+    <h1>🏆 SURVIVOR WORLD 2026</h1>
+    <h2>Elige tu selección</h2>
+
+    <div id="teamSelector"></div>
+
+    <button id="startBtn" disabled>
+        Empezar Survivor
+    </button>
+
+</div>
+
+<!-- JUEGO -->
+
+<div id="gameScreen" class="hidden">
+
+    <h1 id="roundTitle"></h1>
+
+    <div id="playerInfo"></div>
+
+    <div id="countdown"></div>
+
+    <div id="teamsGrid"></div>
+
+    <div id="message"></div>
+
+    <button id="continueBtn" class="hidden">
+        Continuar
+    </button>
+
+</div>
+
+<!-- FINAL -->
+
+<div id="winnerScreen" class="hidden">
+
+    <h1>🏆 CAMPEÓN</h1>
+
+    <div id="champion"></div>
+
+    <button id="restartBtn">
+        Volver a jugar
+    </button>
+
+</div>
+
+<script>
+
+/* ===========================
+   PEGA AQUÍ TU ARRAY COMPLETO
+=========================== */
+
+const teams = [
+
+{ name:"México", flag:"recursos/banderas/mexico.png" },
+{ name:"USA", flag:"recursos/banderas/usa.png" },
+{ name:"Canadá", flag:"recursos/banderas/canada.png" },
+{ name:"Panamá", flag:"recursos/banderas/panama.png" },
+{ name:"Haití", flag:"recursos/banderas/haiti.png" },
+{ name:"Curazao", flag:"recursos/banderas/curazao.png" },
+
+{ name:"Argentina", flag:"recursos/banderas/argentina.png" },
+{ name:"Brasil", flag:"recursos/banderas/brasil.png" },
+{ name:"Colombia", flag:"recursos/banderas/colombia.png" },
+{ name:"Uruguay", flag:"recursos/banderas/uruguay.png" },
+{ name:"Ecuador", flag:"recursos/banderas/ecuador.png" },
+{ name:"Paraguay", flag:"recursos/banderas/paraguay.png" },
+
+{ name:"Francia", flag:"recursos/banderas/francia.png" },
+{ name:"Alemania", flag:"recursos/banderas/alemania.png" },
+{ name:"España", flag:"recursos/banderas/espana.png" },
+{ name:"Portugal", flag:"recursos/banderas/portugal.png" },
+{ name:"Suecia", flag:"recursos/banderas/suecia.png" },
+{ name:"Austria", flag:"recursos/banderas/austria.png" },
+{ name:"Bélgica", flag:"recursos/banderas/belgica.png" },
+{ name:"Bosnia", flag:"recursos/banderas/bosnia.png" },
+{ name:"Chequia", flag:"recursos/banderas/chequia.png" },
+{ name:"Croacia", flag:"recursos/banderas/croacia.png" },
+{ name:"Escocia", flag:"recursos/banderas/escocia.png" },
+{ name:"Inglaterra", flag:"recursos/banderas/inglaterra.png" },
+{ name:"Noruega", flag:"recursos/banderas/noruega.png" },
+{ name:"Países Bajos", flag:"recursos/banderas/paises-bajos.png" },
+{ name:"Suiza", flag:"recursos/banderas/suiza.png" },
+{ name:"Turquía", flag:"recursos/banderas/turquia.png" },
+
+{ name:"Marruecos", flag:"recursos/banderas/marruecos.png" },
+{ name:"Ghana", flag:"recursos/banderas/ghana.png" },
+{ name:"Argelia", flag:"recursos/banderas/argelia.png" },
+{ name:"Egipto", flag:"recursos/banderas/egipto.png" },
+{ name:"Senegal", flag:"recursos/banderas/senegal.png" },
+{ name:"Sudáfrica", flag:"recursos/banderas/sudafrica.png" },
+{ name:"Túnez", flag:"recursos/banderas/tunez.png" },
+{ name:"Congo", flag:"recursos/banderas/congo.png" },
+{ name:"Costa de Marfil", flag:"recursos/banderas/costa-marfil.png" },
+{ name:"Cabo Verde", flag:"recursos/banderas/cabo-verde.png" },
+
+{ name:"Japón", flag:"recursos/banderas/japon.png" },
+{ name:"Corea", flag:"recursos/banderas/korea.png" },
+{ name:"Arabia Saudita", flag:"recursos/banderas/arabia.png" },
+{ name:"Irán", flag:"recursos/banderas/iran.png" },
+{ name:"Iraq", flag:"recursos/banderas/iraq.png" },
+{ name:"Qatar", flag:"recursos/banderas/qatar.png" },
+{ name:"Uzbekistán", flag:"recursos/banderas/uzbekistan.png" },
+{ name:"Jordania", flag:"recursos/banderas/jordan.png" },
+{ name:"Australia", flag:"recursos/banderas/australia.png" },
+
+{ name:"Nueva Zelanda", flag:"recursos/banderas/nueva-zelanda.png" }
+
+];
+
+
+/* ===========================
+   VARIABLES
+=========================== */
+
+let selectedTeam = null;
+
+let remainingTeams = [];
+
+let eliminatedTeams = [];
+
+let currentRound = 0;
+
+let playerAlive = true;
+
+let eliminatedRound = null;
+
+
+/* ===========================
+   RONDAS
+=========================== */
+
+const rounds = [
+
+    {
+        name:"FASE DE GRUPOS",
+        survivors:32
+    },
+
+    {
+        name:"16VOS DE FINAL",
+        survivors:16
+    },
+
+    {
+        name:"1/8 DE FINAL",
+        survivors:8
+    },
+
+    {
+        name:"1/4 DE FINAL",
+        survivors:4
+    },
+
+    {
+        name:"SEMIFINAL",
+        survivors:2
+    },
+
+    {
+        name:"FINAL",
+        survivors:1
+    }
+
+];
+
+
+/* ===========================
+   ELEMENTOS
+=========================== */
+
+const selectionScreen =
+document.getElementById("selectionScreen");
+
+const gameScreen =
+document.getElementById("gameScreen");
+
+const winnerScreen =
+document.getElementById("winnerScreen");
+
+const teamSelector =
+document.getElementById("teamSelector");
+
+const startBtn =
+document.getElementById("startBtn");
+
+const continueBtn =
+document.getElementById("continueBtn");
+
+const restartBtn =
+document.getElementById("restartBtn");
+
+const roundTitle =
+document.getElementById("roundTitle");
+
+const playerInfo =
+document.getElementById("playerInfo");
+
+const countdown =
+document.getElementById("countdown");
+
+const teamsGrid =
+document.getElementById("teamsGrid");
+
+const message =
+document.getElementById("message");
+
+const championDiv =
+document.getElementById("champion");
+
+
+const sfxTick = new Audio("recursos/sounds/tick.mp3");
+const sfxLose = new Audio("recursos/sounds/lose.wav");
+const sfxExplosion = new Audio("recursos/sounds/eliminated.mp3");
+
+sfxExplosion.play();
+
+
+/* ===========================
+   SELECCIÓN
+=========================== */
+
+function renderSelection(){
+
+    teamSelector.innerHTML="";
+
+    teams.forEach(team=>{
+
+        const card =
+        document.createElement("div");
+
+        card.className =
+        "team-option";
+
+        card.innerHTML=`
+            <img src="${team.flag}">
+            <div>${team.name}</div>
+        `;
+
+        card.onclick=()=>{
+
+            selectedTeam = team;
+
+            document
+            .querySelectorAll(".team-option")
+            .forEach(el=>
+                el.classList.remove("selected")
+            );
+
+            card.classList.add("selected");
+
+            startBtn.disabled = false;
+        };
+
+        teamSelector.appendChild(card);
+    });
+}
+
+
+/* ===========================
+   INICIAR PARTIDA
+=========================== */
+
+startBtn.onclick=()=>{
+
+    remainingTeams=[...teams];
+
+    eliminatedTeams=[];
+
+    currentRound=0;
+
+    playerAlive=true;
+
+    eliminatedRound=null;
+
+    selectionScreen.classList.add("hidden");
+
+    gameScreen.classList.remove("hidden");
+
+    loadRound();
+};
+
+
+/* ===========================
+   CARGAR RONDA
+=========================== */
+
+function loadRound(){
+
+    const round =
+    rounds[currentRound];
+
+    roundTitle.textContent =
+    round.name;
+
+    playerInfo.innerHTML =
+    `Tu selección: <b>${selectedTeam.name}</b>`;
+
+    message.innerHTML="";
+
+    continueBtn.classList.add("hidden");
+
+    renderTeams();
+
+    startCountdown();
+}
+
+
+/* ===========================
+   PINTAR EQUIPOS
+=========================== */
+
+function renderTeams(){
+
+    teamsGrid.innerHTML="";
+
+    teams.forEach(team=>{
+
+        const card =
+        document.createElement("div");
+
+        card.className="team-card";
+
+        if(
+            team.name === selectedTeam.name
+        ){
+            card.classList.add("player-team");
+        }
+
+        const alive =
+        remainingTeams.some(
+            t=>t.name===team.name
+        );
+
+        if(!alive){
+            card.classList.add("eliminated");
+        }
+
+        card.innerHTML=`
+            <img src="${team.flag}">
+            <div>${team.name}</div>
+        `;
+
+        teamsGrid.appendChild(card);
+    });
+}
+
+
+/* ===========================
+   CUENTA REGRESIVA
+=========================== */
+/*
+function startCountdown(){
+
+    let time = 3;
+
+    countdown.textContent=time;
+
+    const interval =
+    setInterval(()=>{
+
+        time--;
+
+        countdown.textContent=time;
+        sfxTick.currentTime = 0;
+        sfxTick.play();
+
+        if(time<=0){
+
+            clearInterval(interval);
+
+            countdown.textContent="💥";
+            sfxExplosion.currentTime = 0;
+            sfxExplosion.play();
+
+
+            eliminateTeams();
+        }
+
+    },1000);
+}
+*/
+function startCountdown(){
+
+    let time = 3;
+
+    countdown.textContent = time;
+
+    const interval = setInterval(() => {
+
+        time--;
+
+        countdown.textContent = time;
+
+        if(time > 0){
+
+            sfxTick.currentTime = 0;
+            sfxTick.play();
+
+        } else {
+
+            clearInterval(interval);
+
+            sfxTick.pause();
+            sfxTick.currentTime = 0;
+            countdown.textContent = "💥";
+
+            sfxExplosion.currentTime = 0;
+            sfxExplosion.play();
+
+            setTimeout(() => {
+                eliminateTeams();
+            }, 800);
+        }
+
+    }, 1000);
+}
+
+/* ===========================
+   MEZCLAR
+=========================== */
+
+function shuffle(array){
+
+    for(
+        let i=array.length-1;
+        i>0;
+        i--
+    ){
+
+        const j=
+        Math.floor(
+            Math.random()*(i+1)
+        );
+
+        [array[i],array[j]]
+        =
+        [array[j],array[i]];
+    }
+
+    return array;
+}
+
+
+/* ===========================
+   ELIMINAR
+=========================== */
+
+function eliminateTeams(){
+
+    const round =
+    rounds[currentRound];
+
+    shuffle(remainingTeams);
+
+    const survivors =
+    remainingTeams.slice(
+        0,
+        round.survivors
+    );
+
+    const eliminated =
+    remainingTeams.slice(
+        round.survivors
+    );
+
+    eliminatedTeams.push(
+        ...eliminated
+    );
+
+    remainingTeams =
+    survivors;
+
+    const alive =
+    remainingTeams.some(
+        t=>t.name===selectedTeam.name
+    );
+
+    if(!alive && playerAlive){
+
+        playerAlive=false;
+        sfxLose.play();
+
+        eliminatedRound=
+        round.name;
+    }
+
+    renderTeams();
+
+    if(playerAlive){
+
+        message.innerHTML=
+        `✅ ${selectedTeam.name}
+        sigue con vida`;
+    }
+    else{
+
+        message.innerHTML=
+        `❌ ${selectedTeam.name}
+        fue eliminado en
+        ${eliminatedRound}`;
+    }
+
+    continueBtn.classList.remove("hidden");
+}
+
+
+/* ===========================
+   CONTINUAR
+=========================== */
+
+continueBtn.onclick=()=>{
+
+    currentRound++;
+
+    if(
+        currentRound >= rounds.length
+    ){
+        showWinner();
+        return;
+    }
+
+    loadRound();
+};
+
+
+/* ===========================
+   CAMPEÓN
+=========================== */
+
+function showWinner(){
+
+    gameScreen.classList.add("hidden");
+
+    winnerScreen.classList.remove("hidden");
+
+    const champion =
+    remainingTeams[0];
+
+    let result = "";
+
+    if(
+        champion.name === selectedTeam.name
+    ){
+        result =
+        `<h2>🎉 ¡GANASTE!</h2>`;
+    }
+    else{
+        result =
+        `<h3>Tu equipo cayó en:
+        ${eliminatedRound}</h3>`;
+    }
+
+    championDiv.innerHTML=`
+
+        <img src="${champion.flag}">
+
+        <h2>${champion.name}</h2>
+
+        ${result}
+    `;
+}
+
+
+/* ===========================
+   REINICIAR
+=========================== */
+
+restartBtn.onclick=()=>{
+
+    winnerScreen.classList.add("hidden");
+
+    selectionScreen.classList.remove("hidden");
+
+    selectedTeam = null;
+
+    startBtn.disabled = true;
+
+    document
+    .querySelectorAll(".team-option")
+    .forEach(el=>
+        el.classList.remove("selected")
+    );
+};
+
+
+/* ===========================
+   INICIO
+=========================== */
+
+renderSelection();
+
+</script>
+
+</body>
+</html>

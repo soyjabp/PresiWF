@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Memoria Mundialista</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:
+  linear-gradient(rgba(0,0,0,.65), rgba(0,0,0,.75)),
+  url("https://static.latinspots.com/notas/Gnota_66089.jpg");
+  background-size:cover;
+  background-position:center;
+  overflow-x:hidden;
+  color:white;
+}
+
+/* ========================= */
+/* MENU INICIAL */
+/* ========================= */
+
+.start-screen{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+  linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.85));
+  z-index:9999;
+}
+
+.start-box{
+  width:90%;
+  max-width:420px;
+  background:rgba(10,20,30,.9);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:25px;
+  padding:35px;
+  text-align:center;
+  backdrop-filter:blur(8px);
+  box-shadow:0 0 30px rgba(0,0,0,.5);
+
+}
+
+.start-box h1{
+  font-size:2rem;
+  margin-bottom:15px;
+  letter-spacing:2px;
+}
+
+.start-box p{
+  opacity:.9;
+  line-height:1.6;
+  margin-bottom:25px;
+}
+
+.start-btn{
+  border:none;
+  background:#00c853;
+  color:white;
+  padding:14px 30px;
+  border-radius:12px;
+  font-size:1rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.start-btn:hover{
+  transform:scale(1.05);
+}
+
+/* ========================= */
+/* HUD */
+/* ========================= */
+
+.container{
+  width:95%;
+  max-width:950px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.title{
+  margin-top:18px;
+  font-size:1.7rem;
+  text-align:center;
+  letter-spacing:2px;
+  text-shadow:0 0 10px rgba(255,255,255,.4);
+}
+
+.phase{
+  margin-top:10px;
+  font-size:1rem;
+  background:rgba(255,255,255,.08);
+  padding:10px 18px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.hud{
+  margin-top:15px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.box{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  padding:8px 15px;
+  border-radius:12px;
+  font-size:.9rem;
+  font-weight:bold;
+  backdrop-filter:blur(5px);
+}
+
+/* ========================= */
+/* TABLERO */
+/* ========================= */
+
+.game-board{
+  margin-top:20px;
+  display:grid;
+  gap:8px;
+  justify-content:center;
+  perspective:1000px;
+}
+
+.card{
+  width:54px;
+  height:68px;
+  position:relative;
+  transform-style:preserve-3d;
+  transition:transform .5s;
+  cursor:pointer;
+}
+
+.card.flip{
+
+  transform:rotateY(180deg);
+}
+
+
+.face{
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  overflow:hidden;
+  backface-visibility:hidden;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 4px 10px rgba(0,0,0,.4);
+}
+
+.front{
+  background:
+  linear-gradient(145deg,#12202c,#09131b);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:1.4rem;
+}
+
+.back{
+  transform:rotateY(180deg);
+  background:white;
+}
+
+.back img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.matched{
+
+  animation:glow .6s ease;
+}
+
+@keyframes glow{
+
+  0%{
+    transform:rotateY(180deg) scale(1);
+  }
+
+  50%{
+    transform:rotateY(180deg) scale(1.08);
+  }
+
+  100%{
+    transform:rotateY(180deg) scale(1);
+  }
+}
+
+/* ========================= */
+/* MODAL */
+/* ========================= */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal{
+  width:90%;
+  max-width:400px;
+  background:#0f1a23;
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.modal h2{
+  margin-bottom:15px;
+}
+
+.modal p{
+  line-height:1.6;
+}
+
+.modal button{
+  margin-top:20px;
+  border:none;
+  background:#00c853;
+  color:white;
+  padding:12px 25px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+@media(max-width:500px){
+
+  .card{
+    width:48px;
+    height:60px;
+  }
+
+}
+
+/* ========================= */
+/* TORNEO */
+/* ========================= */
+
+.tournament{
+  width:95%;
+  max-width:900px;
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.stage{
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:.8rem;
+  opacity:.5;
+  transition:.3s;
+}
+
+.stage.active{
+  background:#ffd600;
+  color:black;
+  opacity:1;
+  transform:scale(1.05);
+  font-weight:bold;
+}
+
+.stage.completed{
+  background:#00c853;
+  opacity:1;
+  font-weight:bold;
+}
+
+.line{
+  width:20px;
+  height:2px;
+  background:rgba(255,255,255,.3);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MENU -->
+
+<div class="start-screen" id="startScreen">
+
+  <div class="start-box">
+
+    <h1>MEMORIA MUNDIALISTA</h1>
+
+    <p>
+      Empareja las banderas de las selecciones
+      antes de que termine el tiempo.
+      <br><br>
+      Supera:
+      <br>
+      Fase de grupos → 16avos → Octavos → Cuartos →
+      Semifinal → Final.
+    <br><br>
+    🏆 DESAFÍO MUNDIALISTA
+<br>
+    Gana 2 Mundiales seguidos (2/2)
+<br>
+    🎁 Recompensa:
+    1 Pack Premium solo para PresiFPC
+<br>
+    📩 Para reclamar:
+    Envía evidencia de las 2 victorias al correo de Comunidad
+    </p>
+
+    <button class="start-btn" id="startBtn">
+      INICIAR TORNEO
+    </button>
+
+  </div>
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div class="container">
+
+  <h1 class="title">
+    🌎 ROAD TO WORLD CUP
+  </h1>
+
+  <div class="tournament">
+
+  <div class="stage active">Grupos</div>
+  <div class="line"></div>
+  <div class="stage active">16avos</div>
+  <div class="line"></div>
+  <div class="stage">Octavos</div>
+  <div class="line"></div>
+  <div class="stage">Cuartos</div>
+  <div class="line"></div>
+  <div class="stage">Semi</div>
+  <div class="line"></div>
+  <div class="stage">Final</div>
+
+  </div>
+
+  <div class="phase" id="phaseText">
+    Fase de grupos
+  </div>
+
+  <div class="hud">
+
+    <div class="box">
+      ⏱ Tiempo:
+      <span id="time">0</span>
+    </div>
+
+    <div class="box">
+      🎯 Movimientos:
+      <span id="moves">0</span>
+    </div>
+
+  </div>
+
+  <div class="game-board" id="board"></div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="overlay" id="overlay">
+
+  <div class="modal">
+
+    <h2 id="resultTitle"></h2>
+
+    <p id="resultText"></p>
+
+    <button id="nextBtn">
+      Continuar
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const FLAGS = [
+
+"recursos/banderas/mundial.png",
+"recursos/banderas/Clutch.png",
+"recursos/banderas/maple.png",
+"recursos/banderas/zayu.png",
+
+"recursos/banderas/mexico.png",
+"recursos/banderas/usa.png",
+"recursos/banderas/canada.png",
+"recursos/banderas/panama.png",
+"recursos/banderas/haiti.png",
+"recursos/banderas/curazao.png",
+
+"recursos/banderas/argentina.png",
+"recursos/banderas/brasil.png",
+"recursos/banderas/colombia.png",
+"recursos/banderas/uruguay.png",
+"recursos/banderas/ecuador.png",
+"recursos/banderas/paraguay.png",
+
+"recursos/banderas/francia.png",
+"recursos/banderas/alemania.png",
+"recursos/banderas/espana.png",
+"recursos/banderas/portugal.png",
+"recursos/banderas/suecia.png",
+"recursos/banderas/austria.png",
+"recursos/banderas/belgica.png",
+"recursos/banderas/bosnia.png",
+"recursos/banderas/chequia.png",
+"recursos/banderas/croacia.png",
+"recursos/banderas/escocia.png",
+"recursos/banderas/inglaterra.png",
+"recursos/banderas/noruega.png",
+"recursos/banderas/paises-bajos.png",
+"recursos/banderas/suiza.png",
+"recursos/banderas/turquia.png",
+
+"recursos/banderas/marruecos.png",
+"recursos/banderas/ghana.png",
+"recursos/banderas/argelia.png",
+"recursos/banderas/egipto.png",
+"recursos/banderas/senegal.png",
+"recursos/banderas/sudafrica.png",
+"recursos/banderas/tunez.png",
+"recursos/banderas/congo.png",
+"recursos/banderas/costa-marfil.png",
+"recursos/banderas/cabo-verde.png",
+
+"recursos/banderas/japon.png",
+"recursos/banderas/korea.png",
+"recursos/banderas/arabia.png",
+"recursos/banderas/iran.png",
+"recursos/banderas/iraq.png",
+"recursos/banderas/qatar.png",
+"recursos/banderas/uzbekistan.png",
+"recursos/banderas/jordan.png",
+"recursos/banderas/australia.png",
+
+"recursos/banderas/nueva-zelanda.png",
+
+];
+
+/* ========================= */
+/* FASES */
+/* ========================= */
+const PHASES = [
+
+{
+  name:"Fase de grupos",
+  pairs:4,
+  time:45
+},
+
+{
+  name:"16vos de final",
+  pairs:5,
+  time:42
+},
+
+{
+  name:"Octavos de final",
+  pairs:6,
+  time:40
+},
+
+{
+  name:"Cuartos de final",
+  pairs:8,
+  time:38
+},
+
+{
+  name:"Semifinal",
+  pairs:10,
+  time:35
+},
+
+{
+  name:"Final Mundial",
+  pairs:12,
+  time:35
+}
+
+];
+
+const board = document.getElementById("board");
+const timeText = document.getElementById("time");
+const movesText = document.getElementById("moves");
+const phaseText = document.getElementById("phaseText");
+const overlay = document.getElementById("overlay");
+
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");                                                                                                         
+const nextBtn = document.getElementById("nextBtn");
+const startScreen = document.getElementById("startScreen");
+const startBtn = document.getElementById("startBtn");
+
+const stages = document.querySelectorAll(".stage");
+
+const flipSound = new Audio("recursos/sounds/flip.wav");
+const matchSound = new Audio("recursos/sounds/match.wav");
+const wrongSound = new Audio("recursos/sounds/wrong.wav");
+const winSound = new Audio("recursos/sounds/win.wav");
+const loseSound = new Audio("recursos/sounds/lose.wav");
+const phaseWinSound = new Audio("recursos/sounds/phase-win.wav");
+
+
+let phase = 0;
+
+let firstCard = null;
+let secondCard = null;
+let lockBoard = false;
+
+let moves = 0;
+let matches = 0;
+
+let timer;
+let timeLeft = 0;
+
+let currentFlags = [];
+
+let consecutiveWins =
+parseInt(
+localStorage.getItem(
+"consecutiveWins"
+)
+) || 0;
+
+let victoryCodes =
+JSON.parse(
+localStorage.getItem("victoryCodes")
+) || [];
+
+
+function generateVictoryCode(){
+   const random =
+   Math.floor(
+      10000 + Math.random()*90000
+   );
+   return `WM-${random}`;
+
+}
+
+/* ========================= */
+
+function shuffle(array){
+
+  return array.sort(() => Math.random() - 0.5);
+
+}
+
+function getFlags(amount){
+
+  return shuffle([...FLAGS]).slice(0, amount);
+
+}
+
+function createGrid(totalCards){
+
+  let cols = 4;
+
+  if(totalCards >= 16) cols = 5;
+  if(totalCards >= 20) cols = 6;
+
+  board.style.gridTemplateColumns =
+  `repeat(${cols}, 1fr)`;
+
+}
+
+function updateTournamentUI(){
+
+  stages.forEach(stage => {
+
+    stage.classList.remove(
+      "active",
+      "completed"
+    );
+
+  });
+
+  stages.forEach((stage,index) => {
+
+    if(index < phase){
+
+      stage.classList.add("completed");
+    }
+  });
+
+  stages[phase].classList.add("active");
+
+}
+
+
+function startPhase(){
+
+  clearInterval(timer);
+
+  board.innerHTML = "";
+
+  firstCard = null;
+  secondCard = null;
+
+  moves = 0;
+  matches = 0;
+
+  movesText.textContent = 0;
+
+  const config = PHASES[phase];
+
+  phaseText.innerHTML = config.name;
+  updateTournamentUI();
+
+  currentFlags = getFlags(config.pairs);
+
+  const cards = shuffle([
+    ...currentFlags,
+    ...currentFlags
+  ]);
+
+  createGrid(cards.length);
+
+  cards.forEach(flag => {
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+    card.dataset.flag = flag;
+
+    card.innerHTML = `
+
+      <div class="face front">
+        ⚽
+      </div>
+
+      <div class="face back">
+        <img src="${flag}">
+      </div>
+
+    `;
+
+    card.addEventListener("click", flipCard);
+
+    board.appendChild(card);
+
+  });
+
+  timeLeft = config.time;
+
+  timeText.textContent = timeLeft;
+
+  timer = setInterval(() => {
+
+    timeLeft--;
+
+    timeText.textContent = timeLeft;
+
+    if(timeLeft <= 0){
+
+      clearInterval(timer);
+
+      loseTournament();
+
+    }
+
+  },1000);
+
+}
+
+function flipCard(){
+
+  if(lockBoard) return;
+
+  if(this === firstCard) return;
+
+   flipSound.currentTime = 0;
+   flipSound.play();
+
+  this.classList.add("flip");
+
+  if(!firstCard){
+
+    firstCard = this;
+    return;
+
+  }
+
+  secondCard = this;
+
+  moves++;
+
+  movesText.textContent = moves;
+
+  checkMatch();
+ 
+}
+
+function checkMatch(){
+
+  const match =
+  firstCard.dataset.flag === secondCard.dataset.flag;
+
+  if(match){
+
+    matchSound.currentTime = 0;
+    matchSound.play();
+
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+
+    firstCard.removeEventListener("click", flipCard);
+    secondCard.removeEventListener("click", flipCard);
+
+    matches++;
+
+    matchSound.currentTime = 0;
+    matchSound.play();
+
+    resetTurn();
+
+    if(matches === currentFlags.length){
+
+      clearInterval(timer);
+
+      if(phase >= PHASES.length - 1){
+
+        worldChampion();
+
+      }else{
+
+        nextPhase();
+
+      }
+
+    }
+
+  }else{
+
+    wrongSound.currentTime = 0;
+    wrongSound.play();
+
+    lockBoard = true;
+
+    setTimeout(() => {
+
+      firstCard.classList.remove("flip");
+      secondCard.classList.remove("flip");
+
+      resetTurn();
+
+    },700);
+
+  }
+
+}
+
+function resetTurn(){
+
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+
+}
+
+function nextPhase(){
+
+  phaseWinSound.currentTime = 0;
+  phaseWinSound.play();
+  overlay.style.display = "flex";
+
+  resultTitle.innerHTML =
+  "✅ Clasificaste";
+
+  resultText.innerHTML =
+  `
+  Superaste ${PHASES[phase].name}.
+  <br><br>
+  El siguiente rival será más difícil.
+  `;
+
+  nextBtn.innerHTML =
+  "Jugar siguiente fase";
+
+  nextBtn.onclick = () => {
+
+    overlay.style.display = "none";
+
+    phase++;
+
+    startPhase();
+
+  };
+
+}
+
+function loseTournament(){
+
+  loseSound.play();
+
+  consecutiveWins = 0;
+ 
+  localStorage.setItem(
+   "consecutiveWins", 0
+   );
+
+  overlay.style.display = "flex";
+
+  resultTitle.innerHTML =
+  "❌ Eliminado";
+
+  resultText.innerHTML =
+  `
+  Se terminó el tiempo.
+  <br><br>
+  Has quedado fuera del Mundial.
+  `;
+
+  nextBtn.innerHTML =
+  "Volver a empezar";
+
+  nextBtn.onclick = () => {
+
+    overlay.style.display = "none";
+
+    phase = 0;
+
+    startPhase();
+
+  };
+
+}
+
+function worldChampion(){
+
+  winSound.currentTime = 0;
+  winSound.play();
+
+  consecutiveWins++;
+
+  const code = generateVictoryCode();
+  victoryCodes.push(code);
+  localStorage.setItem("victoryCodes",JSON.stringify(victoryCodes));
+
+
+  localStorage.setItem(
+    "consecutiveWins",
+    consecutiveWins
+  );
+
+  overlay.style.display = "flex";
+
+  if(consecutiveWins >= 2){
+
+      resultTitle.innerHTML =
+      "🎁 PREMIO DESBLOQUEADO";
+
+     resultText.innerHTML=`
+
+     Ganaste:
+     2/2 Mundiales seguidos
+     <br><br>
+
+     Código victoria 1:
+     ${victoryCodes[0]}
+     <br><br>
+
+     Código victoria 2:
+     ${victoryCodes[1]}
+     <br><br>
+
+     📩 Envía captura de ambas
+     victorias al correo Comunidad
+`;
+
+  }else{
+
+      resultTitle.innerHTML =
+      "🏆 CAMPEÓN DEL MUNDO";
+
+     resultText.innerHTML=`
+
+    Mundial ganado
+    <br><br>
+
+    Racha:
+    ${consecutiveWins}/2
+    <br><br>
+
+    Código:
+    ${code}
+`;
+
+  }
+
+  nextBtn.innerHTML =
+  "Jugar otra vez";
+
+  nextBtn.onclick = ()=>{
+      overlay.style.display="none";
+      phase=0;
+      startPhase();
+
+  };
+
+}
+
+/*
+function worldChampion(){
+
+  winSound.play();
+  overlay.style.display = "flex";
+
+  resultTitle.innerHTML =
+  "🏆 CAMPEÓN DEL MUNDO";
+
+  resultText.innerHTML =
+  `
+  Completaste todas las fases
+  del torneo mundialista.
+  
+  Has desbloqueado:
+  🎁 Licencia , toma captura y manda al correo
+  `;
+
+  nextBtn.innerHTML =
+  "Jugar otra vez";
+
+  nextBtn.onclick = () => {
+
+    overlay.style.display = "none";
+
+    phase = 0;
+
+    startPhase();
+
+  };
+
+}
+*/
+
+/* ========================= */
+/* BOTÓN INICIAR */
+/* ========================= */
+
+startBtn.addEventListener("click", () => {
+
+  startScreen.style.display = "none";
+
+  startPhase();
+
+});
+
+FLAGS.forEach(flag=>{
+    const img = new Image();
+
+    img.onload = ()=>console.log("OK:",flag);
+
+    img.onerror = ()=>console.log("ERROR:",flag);
+
+    img.src = flag;
+});
+
+</script>
+
+</body>
+</html>
