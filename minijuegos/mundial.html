@@ -412,66 +412,64 @@ body{
 <script>
 
 const FLAGS = [
+  "banderas/mundial.png",
+  "banderas/Clutch.png",
+  "banderas/maple.png",
+  "banderas/zayu.png",
 
-"recursos/banderas/mundial.png",
-"recursos/banderas/Clutch.png",
-"recursos/banderas/maple.png",
-"recursos/banderas/zayu.png",
+  "banderas/mexico.png",
+  "banderas/usa.png",
+  "banderas/canada.png",
+  "banderas/panama.png",
+  "banderas/haiti.png",
+  "banderas/curazao.png",
 
-"recursos/banderas/mexico.png",
-"recursos/banderas/usa.png",
-"recursos/banderas/canada.png",
-"recursos/banderas/panama.png",
-"recursos/banderas/haiti.png",
-"recursos/banderas/curazao.png",
+  "banderas/argentina.png",
+  "banderas/brasil.png",
+  "banderas/colombia.png",
+  "banderas/uruguay.png",
+  "banderas/ecuador.png",
+  "banderas/paraguay.png",
 
-"recursos/banderas/argentina.png",
-"recursos/banderas/brasil.png",
-"recursos/banderas/colombia.png",
-"recursos/banderas/uruguay.png",
-"recursos/banderas/ecuador.png",
-"recursos/banderas/paraguay.png",
+  "banderas/francia.png",
+  "banderas/alemania.png",
+  "banderas/espana.png",
+  "banderas/portugal.png",
+  "banderas/suecia.png",
+  "banderas/austria.png",
+  "banderas/belgica.png",
+  "banderas/bosnia.png",
+  "banderas/chequia.png",
+  "banderas/croacia.png",
+  "banderas/escocia.png",
+  "banderas/inglaterra.png",
+  "banderas/noruega.png",
+  "banderas/paises-bajos.png",
+  "banderas/suiza.png",
+  "banderas/turquia.png",
 
-"recursos/banderas/francia.png",
-"recursos/banderas/alemania.png",
-"recursos/banderas/espana.png",
-"recursos/banderas/portugal.png",
-"recursos/banderas/suecia.png",
-"recursos/banderas/austria.png",
-"recursos/banderas/belgica.png",
-"recursos/banderas/bosnia.png",
-"recursos/banderas/chequia.png",
-"recursos/banderas/croacia.png",
-"recursos/banderas/escocia.png",
-"recursos/banderas/inglaterra.png",
-"recursos/banderas/noruega.png",
-"recursos/banderas/paises-bajos.png",
-"recursos/banderas/suiza.png",
-"recursos/banderas/turquia.png",
+  "banderas/marruecos.png",
+  "banderas/ghana.png",
+  "banderas/argelia.png",
+  "banderas/egipto.png",
+  "banderas/senegal.png",
+  "banderas/sudafrica.png",
+  "banderas/tunez.png",
+  "banderas/congo.png",
+  "banderas/costa-marfil.png",
+  "banderas/cabo-verde.png",
 
-"recursos/banderas/marruecos.png",
-"recursos/banderas/ghana.png",
-"recursos/banderas/argelia.png",
-"recursos/banderas/egipto.png",
-"recursos/banderas/senegal.png",
-"recursos/banderas/sudafrica.png",
-"recursos/banderas/tunez.png",
-"recursos/banderas/congo.png",
-"recursos/banderas/costa-marfil.png",
-"recursos/banderas/cabo-verde.png",
+  "banderas/japon.png",
+  "banderas/korea.png",
+  "banderas/arabia.png",
+  "banderas/iran.png",
+  "banderas/iraq.png",
+  "banderas/qatar.png",
+  "banderas/uzbekistan.png",
+  "banderas/jordan.png",
+  "banderas/australia.png",
 
-"recursos/banderas/japon.png",
-"recursos/banderas/korea.png",
-"recursos/banderas/arabia.png",
-"recursos/banderas/iran.png",
-"recursos/banderas/iraq.png",
-"recursos/banderas/qatar.png",
-"recursos/banderas/uzbekistan.png",
-"recursos/banderas/jordan.png",
-"recursos/banderas/australia.png",
-
-"recursos/banderas/nueva-zelanda.png",
-
+  "banderas/nueva-zelanda.png",
 ];
 
 /* ========================= */
@@ -531,12 +529,12 @@ const startBtn = document.getElementById("startBtn");
 
 const stages = document.querySelectorAll(".stage");
 
-const flipSound = new Audio("recursos/sounds/flip.wav");
-const matchSound = new Audio("recursos/sounds/match.wav");
-const wrongSound = new Audio("recursos/sounds/wrong.wav");
-const winSound = new Audio("recursos/sounds/win.wav");
-const loseSound = new Audio("recursos/sounds/lose.wav");
-const phaseWinSound = new Audio("recursos/sounds/phase-win.wav");
+const flipSound = new Audio("sounds/flip.wav");
+const matchSound = new Audio("sounds/match.wav");
+const wrongSound = new Audio("sounds/wrong.wav");
+const winSound = new Audio("sounds/win.wav");
+const loseSound = new Audio("sounds/lose.wav");
+const phaseWinSound = new Audio("sounds/phase-win.wav");
 
 
 let phase = 0;
