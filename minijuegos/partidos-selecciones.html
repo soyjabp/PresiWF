@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,
+   initial-scale=1.0">
+  <title>Partido Mundial</title>
+  <style>
+/* ===============================
+   RESET BÁSICO
+================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: linear-gradient(180deg, #0b132b, #1c2541);
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 8px;
+}
+
+/* ===============================
+   CONTENEDOR PRINCIPAL
+================================ */
+.partido-container {
+  max-width: 100%;
+  margin: 0 auto;
+  background: #111827;
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+}
+
+/* ===============================
+   TÍTULO
+================================ */
+.partido-container h1 {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+/* ===============================
+   SELECTS
+================================ */
+.selectores {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.selectores select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.95rem;
+  background: #1f2937;
+  color: #fff;
+}
+
+/* ===============================
+   BOTONES
+================================ */
+.botones {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.botones button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .1s ease, opacity .1s ease;
+}
+
+.botones button:active {
+  transform: scale(0.97);
+}
+
+.btn-jugar {
+  background: #22c55e;
+  color: #052e16;
+}
+
+.btn-detener {
+  background: #ef4444;
+  color: #450a0a;
+}
+
+/* ===============================
+   MARCADOR
+================================ */
+.marcador{
+  background:#000000;
+  padding:0px;
+  margin: 15px auto;
+  width:fit-content;
+  border-radius: 10px;
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.marcador span {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.marcador .separador {
+  margin: 0 14px;
+}
+
+/* ===============================
+   CRONÓMETRO
+================================ */
+.caja-crono{
+  background:#fff;
+  color: #000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 20px;
+  border-radius: 20%;
+  align-self:stretch; /* clave */
+}
+
+.cronometro{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size: 20px;
+  font-weight: bold;
+  height:100%;
+}
+
+/* ===============================
+   INFO PARTIDO
+================================ */
+.info-partido {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  color: #c7d2fe;
+}
+
+/* ===============================
+   EVENTOS
+================================ */
+.eventos {
+  background: #020617;
+  border-radius: 12px;
+  padding: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.eventos p {
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+/* ===============================
+   DESKTOP (opcional)
+================================ */
+@media (min-width: 768px) {
+  .partido-container {
+    max-width: 600px;
+    padding: 20px;
+  }
+
+  .marcador span {
+    font-size: 2.6rem;
+  }
+}
+
+.marcador-equipos{
+  display:flex;
+  align-items: stretch;
+}
+
+.equipo{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  width:auto;
+  min-width:90px;
+  font-size:.85rem;
+  font-weight:700;
+}
+
+.equipo span{
+  margin: 10px;
+}
+
+.escudo{
+  width:26px;
+  height:26px;
+  border-radius:0%;
+  object-fit:cover;
+  margin: 10px;
+}
+
+#marcador{
+  background: #0cd7d0;
+  color: #000;
+  border-radius: 20%;
+  font-size:2rem;
+  font-weight:900;
+  min-width:80px;
+  text-align:center;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="partido-container">
+
+  <h1>⚽ Partido Rápido</h1>
+
+  <div class="selectores">
+    <select id="equipoLocal"></select>
+    <select id="equipoVisitante"></select>
+  </div>
+
+  <div class="botones">
+    <button class="btn-jugar" onclick="jugarPartido()">▶️ Jugar</button>
+    <button class="btn-detener" onclick="detenerPartido()">⏹️ Detener</button>
+  </div>
+
+  <div class="marcador marcador-equipos">
+
+  <div class="caja-crono">
+     <div class="cronometro" id="cronometro">0'</div>
+  </div>
+
+  <div class="equipo equipo-local">
+    <img id="escudoLocal" class="escudo" src="" alt="">
+    <span id="nombreLocal"></span>
+  </div>
+
+  <span id="marcador">0 - 0</span>
+
+  <div class="equipo equipo-visitante">
+    <img id="escudoVisitante" class="escudo" src="" alt="">
+    <span id="nombreVisitante"></span>
+  </div>
+
+</div>
+
+  <div class="info-partido" id="infoPartido"></div>
+
+  <div class="eventos" id="eventos"></div>
+
+</div>
+
+<script>
+/*************************************************
+ *  MODO PARTIDO RÁPIDO
+ *  Depende de global.js
+ *************************************************/
+
+// Estado del partido
+let minutoPartido = 0;
+let golesLocal = 0;
+let golesVisitante = 0;
+let intervaloPartido = null;
+
+
+//EQUIPOS
+let equiposmundial = [
+  { nombre: "Argentina", fuerza: 92 },
+  { nombre: "España", fuerza: 92 },
+  { nombre: "Francia", fuerza: 91 },
+  { nombre: "Brasil", fuerza: 90 },
+
+  { nombre: "Inglaterra", fuerza: 88 },
+  { nombre: "Portugal", fuerza: 88 },
+  { nombre: "Países Bajos", fuerza: 87 },
+  { nombre: "Alemania", fuerza: 87 },
+  { nombre: "Colombia", fuerza: 85 },
+
+  { nombre: "Japón", fuerza: 85 },
+  { nombre: "Bélgica", fuerza: 84 },
+  { nombre: "Croacia", fuerza: 84 },
+  { nombre: "Uruguay", fuerza: 84 },
+  { nombre: "Marruecos", fuerza: 83 },
+  { nombre: "Suiza", fuerza: 82 },
+  { nombre: "México", fuerza: 81 },
+
+  { nombre: "USA", fuerza: 80 },
+  { nombre: "Austria", fuerza: 79 },
+  { nombre: "Turquía", fuerza: 79 },
+  { nombre: "Argelia", fuerza: 78 },
+  { nombre: "Suecia", fuerza: 78 },
+  { nombre: "Ecuador", fuerza: 78 },
+  { nombre: "Senegal", fuerza: 78 },
+  { nombre: "Irán", fuerza: 77 },
+  { nombre: "Paraguay", fuerza: 77 },
+  { nombre: "Noruega", fuerza: 77 },
+  { nombre: "Australia", fuerza: 76 },
+  { nombre: "Chequia", fuerza: 76 },
+
+  { nombre: "Canadá", fuerza: 75 },
+  { nombre: "Corea", fuerza: 74 },
+  { nombre: "Costa de Marfil", fuerza: 74 },
+  { nombre: "Ghana", fuerza: 73 },
+  { nombre: "Egipto", fuerza: 73 },
+  { nombre: "Bosnia", fuerza: 73 },
+  { nombre: "Escocia", fuerza: 73 },
+
+  { nombre: "Panamá", fuerza: 72 },
+  { nombre: "Túnez", fuerza: 72 },
+  { nombre: "Arabia Saudita", fuerza: 71 },
+  { nombre: "Uzbekistán", fuerza: 71 },
+
+  { nombre: "Jordania", fuerza: 66 },
+
+  { nombre: "Qatar", fuerza: 65 },
+  { nombre: "Sudáfrica", fuerza: 65 },
+  { nombre: "Cabo Verde", fuerza: 65 },
+  { nombre: "Nueva Zelanda", fuerza: 65 },
+  { nombre: "Congo", fuerza: 65 },
+
+  { nombre: "Haití", fuerza: 64 },
+  { nombre: "Curazao", fuerza: 63 },
+  { nombre: "Iraq", fuerza: 63 }
+];
+
+const teams = [
+
+{ name:"México", flag:"banderas/mexico.png" },
+{ name:"USA", flag:"banderas/usa.png" },
+{ name:"Canadá", flag:"banderas/canada.png" },
+{ name:"Panamá", flag:"banderas/panama.png" },
+{ name:"Haití", flag:"banderas/haiti.png" },
+{ name:"Curazao", flag:"banderas/curazao.png" },
+
+{ name:"Argentina", flag:"banderas/argentina.png" },
+{ name:"Brasil", flag:"banderas/brasil.png" },
+{ name:"Colombia", flag:"banderas/colombia.png" },
+{ name:"Uruguay", flag:"banderas/uruguay.png" },
+{ name:"Ecuador", flag:"banderas/ecuador.png" },
+{ name:"Paraguay", flag:"banderas/paraguay.png" },
+
+{ name:"Francia", flag:"banderas/francia.png" },
+{ name:"Alemania", flag:"banderas/alemania.png" },
+{ name:"España", flag:"banderas/espana.png" },
+{ name:"Portugal", flag:"banderas/portugal.png" },
+{ name:"Suecia", flag:"banderas/suecia.png" },
+{ name:"Austria", flag:"banderas/austria.png" },
+{ name:"Bélgica", flag:"banderas/belgica.png" },
+{ name:"Bosnia", flag:"banderas/bosnia.png" },
+{ name:"Chequia", flag:"banderas/chequia.png" },
+{ name:"Croacia", flag:"banderas/croacia.png" },
+{ name:"Escocia", flag:"banderas/escocia.png" },
+{ name:"Inglaterra", flag:"banderas/inglaterra.png" },
+{ name:"Noruega", flag:"banderas/noruega.png" },
+{ name:"Países Bajos", flag:"banderas/paises-bajos.png" },
+{ name:"Suiza", flag:"banderas/suiza.png" },
+{ name:"Turquía", flag:"banderas/turquia.png" },
+
+{ name:"Marruecos", flag:"banderas/marruecos.png" },
+{ name:"Ghana", flag:"banderas/ghana.png" },
+{ name:"Argelia", flag:"banderas/argelia.png" },
+{ name:"Egipto", flag:"banderas/egipto.png" },
+{ name:"Senegal", flag:"banderas/senegal.png" },
+{ name:"Sudáfrica", flag:"banderas/sudafrica.png" },
+{ name:"Túnez", flag:"banderas/tunez.png" },
+{ name:"Congo", flag:"banderas/congo.png" },
+{ name:"Costa de Marfil", flag:"banderas/costa-marfil.png" },
+{ name:"Cabo Verde", flag:"banderas/cabo-verde.png" },
+
+{ name:"Japón", flag:"banderas/japon.png" },
+{ name:"Corea", flag:"banderas/korea.png" },
+{ name:"Arabia Saudita", flag:"banderas/arabia.png" },
+{ name:"Irán", flag:"banderas/iran.png" },
+{ name:"Iraq", flag:"banderas/iraq.png" },
+{ name:"Qatar", flag:"banderas/qatar.png" },
+{ name:"Uzbekistán", flag:"banderas/uzbekistan.png" },
+{ name:"Jordania", flag:"banderas/jordan.png" },
+{ name:"Australia", flag:"banderas/australia.png" },
+
+{ name:"Nueva Zelanda", flag:"banderas/nueva-zelanda.png" }
+
+];
+
+function abreviatura(nombre){
+
+  const codigos = {
+    "México":"MEX",
+    "USA":"USA",
+    "Canadá":"CAN",
+    "Panamá":"PAN",
+    "Haití":"HAI",
+    "Curazao":"CUW",
+
+    "Argentina":"ARG",
+    "Brasil":"BRA",
+    "Uruguay":"URU",
+    "Colombia":"COL",
+    "Paraguay":"PAR",
+    "Ecuador":"ECU",
+
+    "Francia": "FRA",
+    "Alemania": "GER",
+    "España": "ESP",
+    "Portugal": "POR",
+    "Suecia": "SWE",
+    "Austria": "AUT",
+    "Bélgica": "BEL",
+    "Bosnia": "BIH",
+    "Chequia": "CZE",
+    "Croacia": "CRO",
+    "Escocia": "SCO",
+    "Inglaterra": "ENG",
+    "Noruega": "NOR",
+    "Países Bajos": "NED",
+    "Suiza": "SUI",
+    "Turquía": "TUR",
+
+    "Marruecos":"MAR",
+    "Ghana":"GHA",
+    "Argelia":"ALG",
+    "Egipto":"EGY",
+    "Senegal":"SEN",
+    "Sudáfrica":"RSA",
+    "Túnez":"TUN",
+    "Congo":"COD",
+    "Costa de Marfil":"CIV",
+    "Cabo Verde":"CPV",
+
+    "Japón":"JPN",
+    "Corea":"KOR",
+    "Arabia Saudita":"KSA",
+    "Iraq":"IRQ",
+    "Irán":"IRN",
+    "Qatar":"QAT",
+    "Uzbekistán":"UZB",
+    "Jordania":"JOR",
+    "Australia":"AUS",
+    "Nueva Zelanda": "NZL"
+  };
+
+  return codigos[nombre] || nombre.substring(0,3).toUpperCase();
+}
+
+// Inicializar selects de equipos
+function inicializarPartidos() {
+  const selectLocal = document.getElementById("equipoLocal");
+  const selectVisitante = document.getElementById("equipoVisitante");
+
+  if (!selectLocal || !selectVisitante) return;
+
+  selectLocal.innerHTML = `<option value="">--Local--</option>`;
+  selectVisitante.innerHTML = `<option value="">--Visitante--</option>`;
+
+  const todosLosEquipos = [
+    ...equiposmundial.map(e => e.nombre)
+  ];
+
+  todosLosEquipos.forEach(nombre => {
+    const opt1 = document.createElement("option");
+    opt1.value = nombre;
+    opt1.textContent = nombre;
+
+    const opt2 = document.createElement("option");
+    opt2.value = nombre;
+    opt2.textContent = nombre;
+
+    selectLocal.appendChild(opt1);
+    selectVisitante.appendChild(opt2);
+  });
+}
+
+// ▶️ Iniciar partido
+function jugarPartido() {
+  const nombreLocal = document.getElementById("equipoLocal").value;
+const nombreVisitante = document.getElementById("equipoVisitante").value;
+
+  if (!nombreLocal || !nombreVisitante) {
+    alert("⚠️ Debes elegir ambos equipos");
+    return;
+  }
+
+  if (nombreLocal === nombreVisitante) {
+    alert("❌ No pueden jugar el mismo equipo");
+    return;
+  }
+
+  // Reset
+  detenerPartido();
+  minutoPartido = 0;
+  golesLocal = 0;
+  golesVisitante = 0;
+  
+  const local = equiposmundial.find(e => e.nombre === nombreLocal);
+  const visitante = equiposmundial.find(e => e.nombre === nombreVisitante);
+
+  const fuerzaLocal = local.fuerza;
+  const fuerzaVisitante = visitante.fuerza;
+
+  actualizarUI(local.nombre, visitante.nombre);
+
+  intervaloPartido = setInterval(() => {
+  minutoPartido++;
+  actualizarCronometro();
+
+  // evaluar solo cada 5 minutos
+  if (minutoPartido % 5 === 0) {
+    evaluarGol(local.nombre,visitante.nombre,fuerzaLocal,fuerzaVisitante);
+  }
+
+  if (minutoPartido >= 90) finalizarPartido();
+}, 80);
+}
+
+// ⏹️ Detener partido
+function detenerPartido() {
+  if (intervaloPartido) {
+    clearInterval(intervaloPartido);
+    intervaloPartido = null;
+  }
+}
+
+// 🏁 Final del partido
+function finalizarPartido() {
+  detenerPartido();
+  agregarEvento("🏁 Final del partido");
+}
+
+// ⚽ Evaluar si hay gol
+function evaluarGol(local, visitante, fuerzaLocal, fuerzaVisitante) {
+
+  if (golesLocal + golesVisitante >= 7) return;
+
+  const diferencia = fuerzaLocal - fuerzaVisitante;
+
+  let probLocal = 0.08 + (diferencia * 0.0015);
+  let probVisitante = 0.08 - (diferencia * 0.0015);
+
+  probLocal = Math.max(0.03, Math.min(0.20, probLocal));
+  probVisitante = Math.max(0.03, Math.min(0.20, probVisitante));
+
+  if (Math.random() < probLocal) {
+    golesLocal++;
+    agregarEvento(`⚽ ${minutoPartido}' Gol de ${local}`);
+  }
+
+  if (Math.random() < probVisitante) {
+    golesVisitante++;
+    agregarEvento(`⚽ ${minutoPartido}' Gol de ${visitante}`);
+  }
+
+  actualizarMarcador();
+}
+
+
+function actualizarUI(local, visitante) {
+  document.getElementById("cronometro").innerText = "0'";
+  document.getElementById("marcador").innerText = "0 - 0";
+  document.getElementById("eventos").innerHTML = "";
+
+  // nombres
+  //document.getElementById("nombreLocal").innerText = local;
+  //document.getElementById("nombreVisitante").innerText = visitante;
+
+  document.getElementById("nombreLocal").innerText =
+  abreviatura(local);
+
+  document.getElementById("nombreVisitante").innerText =
+  abreviatura(visitante);
+
+  document.getElementById("escudoLocal").src =
+    obtenerBandera(local);
+
+  document.getElementById("escudoVisitante").src =
+    obtenerBandera(visitante);
+} 
+
+function obtenerBandera(nombreEquipo) {
+  const equipo = teams.find(t => t.name === nombreEquipo);
+  return equipo ? equipo.flag : "";
+}
+
+
+
+function actualizarCronometro() {
+  document.getElementById("cronometro").innerText =
+    `${minutoPartido}'`;
+}
+
+function actualizarMarcador() {
+  document.getElementById("marcador").innerText =
+    `${golesLocal} - ${golesVisitante}`;
+}
+
+// 📝 Eventos
+function agregarEvento(texto) {
+  const div = document.getElementById("eventos");
+  if (!div) return;
+
+  div.insertAdjacentHTML(
+    "afterbegin",
+    `<p>${texto}</p>`
+  );
+}
+
+// 🔄 Auto iniciar cuando carga la página
+window.addEventListener("load", () => {
+  inicializarPartidos();
+});
+</script>
+</body>
+</html>
