@@ -1,0 +1,75 @@
+{
+"id": "/PresiFPC/",
+  "name": "PF - Presi Football",
+  "short_name": "PresiFO",
+  "description": "Administra un club colombiano, toma decisiones clave y compite por el título. ¡Demuestra que puedes ser un gran presidente!",
+  "start_url": "/PresiFO/",
+  "scope": "/PresiFO/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/cap1.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/cap2.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+     {
+      "src": "screenshots/cap3.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/cap4.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/cap5.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/cap6.png",
+      "sizes": "1080x1920",
+      "type": "image/png"
+    }
+
+  ]
+}
